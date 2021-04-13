@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+>
+
+        <LinearLayout
+            android:id="@+id/view_messages"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#A3F8F5F5"
+            android:clickable="true"
+            android:orientation="horizontal">
+
+            <ImageView
+
+                android:layout_width="53dp"
+                android:layout_height="54dp"
+                android:layout_alignParentEnd="true"
+
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_logo" />
+
+
+            <TextView
+                android:id="@+id/fullname"
+                android:layout_width="118dp"
+                android:layout_height="78dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:text="First contect"
+                android:textColor="#090000"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="118dp"
+                android:layout_height="78dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:text="email"
+                android:textColor="#090000"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.cardview.widget.CardView>
+
+
