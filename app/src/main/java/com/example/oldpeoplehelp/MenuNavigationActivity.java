@@ -63,7 +63,7 @@ public class MenuNavigationActivity extends AppCompatActivity {
     }
     public void ClickZoneMapping(View view){
         // Redirect activity to search arounds location : just Test
-        redirectActivity(this,NearbyPlacesActivity.class);
+        redirectActivity(this,MapsActivity.class);
     }
     public void ClickChat(View view){
         // Redirect activity to Chat : just Test

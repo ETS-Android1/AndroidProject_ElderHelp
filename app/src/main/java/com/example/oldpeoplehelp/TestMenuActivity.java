@@ -34,7 +34,7 @@ public class TestMenuActivity extends AppCompatActivity {
         MenuNavigationActivity.redirectActivity(this,TestMenuActivity.class);
     }
     public void ClickZoneMapping(View view){
-        MenuNavigationActivity.redirectActivity(this,NearbyPlacesActivity.class);
+        MenuNavigationActivity.redirectActivity(this,MapsActivity.class);
     }
     public void ClickChat(View view){
         MenuNavigationActivity.redirectActivity(this,TestMenuActivity.class);
