@@ -35,14 +35,14 @@ public class UsersAdapter extends ArrayAdapter implements View.OnClickListener {
         View listItemView= inflater.inflate(R.layout.user_item,parent,false);
 
         TextView fullname=listItemView.findViewById(R.id.fullname);
-        TextView email=listItemView.findViewById(R.id.email);
+        //TextView email=listItemView.findViewById(R.id.hisEmail);
 
         fullname.setOnClickListener(this);
         User user=userList.get(position);
 
 
         fullname.setText(user.getFullname());
-        email.setText(user.getEmail());
+        //email.setText(user.getEmail());
         return listItemView;
     }
 
@@ -53,4 +53,5 @@ public class UsersAdapter extends ArrayAdapter implements View.OnClickListener {
         Intent intent=new Intent(mContext,MessageActivity.class);
         mContext.startActivity(intent);
     }
+
 }

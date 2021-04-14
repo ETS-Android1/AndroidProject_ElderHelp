@@ -30,6 +30,7 @@ public class  UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder> {
         this.context = context;
         this.listUsers = listUsers;
     }
+    
 
     public class MyHolder extends RecyclerView.ViewHolder{
         ImageView user_image;
@@ -46,7 +47,7 @@ public class  UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder> {
     @NonNull
     @Override
     public UserAdapter.MyHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int id) {
-        View view=LayoutInflater.from(context).inflate(R.layout.activity_message,viewGroup);
+        View view=LayoutInflater.from(context).inflate(R.layout.user_item,viewGroup);
         return new MyHolder(view);
     }
 

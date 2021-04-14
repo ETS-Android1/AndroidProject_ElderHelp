@@ -23,11 +23,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+
 
 public class MessageActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     TextView fullname;
+    List<User> userList;
     TextView status;
     EditText messageEt;
     ImageButton sendBtn;
@@ -57,7 +60,7 @@ public class MessageActivity extends AppCompatActivity {
         sendBtn=findViewById(R.id.sendBtn);
 
         Intent intent=getIntent();
-        hisEmail=intent.getStringExtra("email");
+        hisEmail=intent.getStringExtra("hisEmail");
         firebaseAuth =FirebaseAuth.getInstance();
         firebaseDatabase=FirebaseDatabase.getInstance();
         userDbRef=firebaseDatabase.getReference("Users");
@@ -69,11 +72,11 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot ds:snapshot.getChildren()){
-                    String name=""+ds.child("name").getValue();
+                    String name=""+ds.child("fullname").getValue();
                     //String name=""+ds.child("name").getValue();
                     fullname.setText(name);
                 }
-               // UserAdapter adapter = new UsersAdapter(MessageActivity.this, userList);
+                //UserAdapter adapter = new UserAdapter(MessageActivity.this, userList);
                 //recyclerView.setAdapter(adapter);
             }
 
