@@ -74,9 +74,9 @@ public class ContactListActivity extends AppCompatActivity
                             {
                                 String visit_user_id = getRef(position).getKey();
 
-                                Intent profileIntent = new Intent(ContactListActivity.this, ProfileActivity.class);
-                                profileIntent.putExtra("visit_user_id", visit_user_id);
-                                startActivity(profileIntent);
+                                Intent chatIntent = new Intent(ContactListActivity.this, MessageActivity.class);
+                                chatIntent.putExtra("visit_user_id", visit_user_id);
+                                startActivity(chatIntent);
                             }
                         });
                     }
