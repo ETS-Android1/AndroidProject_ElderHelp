@@ -33,7 +33,8 @@ public class MessageActivity extends AppCompatActivity
     //private CircleImageView userProfileImage;
     private TextView userProfileName, userProfileStatus;
     //private Button SendMessageRequestButton, DeclineMessageRequestButton;
-
+    private ImageButton SendMessageButton, SendFilesButton;
+    private EditText MessageInputText;
     private DatabaseReference UserRef, ChatRequestRef, ContactsRef, NotificationRef;
     private FirebaseAuth mAuth;
 

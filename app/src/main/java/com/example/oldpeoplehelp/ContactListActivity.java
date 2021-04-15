@@ -61,7 +61,7 @@ public class ContactListActivity extends AppCompatActivity
         FirebaseRecyclerAdapter<User, FindFriendViewHolder> adapter =
                 new FirebaseRecyclerAdapter<User, FindFriendViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull FindFriendViewHolder holder, final int position, @NonNull User user) {
+                    protected void onBindViewHolder(@NonNull FindFriendViewHolder holder, final int position, @NonNull final User user) {
                         holder.userName.setText(user.getFullname());
                         //holder.userStatus.setText(model.getStatus());
                         /////for image profile
@@ -74,8 +74,9 @@ public class ContactListActivity extends AppCompatActivity
                             {
                                 String visit_user_id = getRef(position).getKey();
 
-                                Intent chatIntent = new Intent(ContactListActivity.this, MessageActivity.class);
+                                Intent chatIntent = new Intent(ContactListActivity.this, ChatActivity.class);
                                 chatIntent.putExtra("visit_user_id", visit_user_id);
+                                chatIntent.putExtra("visit_user_name", user.getFullname());
                                 startActivity(chatIntent);
                             }
                         });
