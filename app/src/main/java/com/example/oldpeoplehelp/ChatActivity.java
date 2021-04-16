@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -51,9 +52,9 @@ public class ChatActivity extends AppCompatActivity
     private ImageButton SendMessageButton, SendFilesButton;
     private EditText MessageInputText;
 
-    //private final List<Messages> messagesList = new ArrayList<>();
+    private final List<Messages> messagesList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
-    //private MessageAdapter messageAdapter;
+    private MessageAdapter messageAdapter;
     private RecyclerView userMessagesList;
 
 
@@ -83,8 +84,6 @@ public class ChatActivity extends AppCompatActivity
 
         userName.setText(messageReceiverName);
         //Picasso.get().load(messageReceiverImage).placeholder(R.drawable.profile_image).into(userImage);
-
-
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -119,22 +118,22 @@ public class ChatActivity extends AppCompatActivity
 
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_btn);
         //SendFilesButton = (ImageButton) findViewById(R.id.send_files_btn);
-        //MessageInputText = (EditText) findViewById(R.id.input_message);
+        MessageInputText = (EditText) findViewById(R.id.input_message);
 
-        //messageAdapter = new MessageAdapter(messagesList);
+        messageAdapter = new MessageAdapter(messagesList);
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
         linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);
-        //userMessagesList.setAdapter(messageAdapter);
+        userMessagesList.setAdapter(messageAdapter);
 
 
-        Calendar calendar = Calendar.getInstance();
+        //Calendar calendar = Calendar.getInstance();
 
-        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-        saveCurrentDate = currentDate.format(calendar.getTime());
+        //SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+       // saveCurrentDate = currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
-        saveCurrentTime = currentTime.format(calendar.getTime());
+        //SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        //saveCurrentTime = currentTime.format(calendar.getTime());
     }
 
 
@@ -185,11 +184,11 @@ public class ChatActivity extends AppCompatActivity
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s)
                     {
-                        //Messages messages = dataSnapshot.getValue(Messages.class);
+                        Messages messages = dataSnapshot.getValue(Messages.class);
 
-                        //messagesList.add(messages);
+                        messagesList.add(messages);
 
-                        //messageAdapter.notifyDataSetChanged();
+                        messageAdapter.notifyDataSetChanged();
 
                         userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
                     }
@@ -249,7 +248,7 @@ public class ChatActivity extends AppCompatActivity
             messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
             messageBodyDetails.put( messageReceiverRef + "/" + messagePushID, messageTextBody);
 
-          /* RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+          RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
                 @Override
                 public void onComplete(@NonNull Task task)
                 {
@@ -264,6 +263,5 @@ public class ChatActivity extends AppCompatActivity
                     MessageInputText.setText("");
                 }
             });
-        }*/
-    }
+        }
 }}
