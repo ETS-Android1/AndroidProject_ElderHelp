@@ -15,8 +15,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class RegistrationActivity extends AppCompatActivity{
 
@@ -24,6 +27,8 @@ public class RegistrationActivity extends AppCompatActivity{
     private Button sign_up;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
+    private DatabaseReference RootRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +36,7 @@ public class RegistrationActivity extends AppCompatActivity{
         setContentView(R.layout.activity_registration);
         mAuth = FirebaseAuth.getInstance();
 
-       // username = findViewById(R.id.username_register);
+        // username = findViewById(R.id.username_register);
         fullname = findViewById(R.id.Fullname);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password_register);
@@ -116,6 +121,13 @@ public class RegistrationActivity extends AppCompatActivity{
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            String currentUserId = mAuth.getCurrentUser().getUid();
+                            String deviceToken = FirebaseInstanceId.getInstance().getToken();
+                            RootRef.child("Users").child(currentUserId).setValue("");
+
+
+                            RootRef.child("Users").child(currentUserId).child("device_token")
+                                    .setValue(deviceToken);
                             User user = new User(fullname_,email_,password_,sexe_,address_,age_,dateOfBirth_);
                             FirebaseDatabase.getInstance().getReference("Users").child(
                                     FirebaseAuth.getInstance().getCurrentUser().getUid()

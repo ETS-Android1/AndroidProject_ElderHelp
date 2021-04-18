@@ -18,6 +18,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
+    private DatabaseReference UsersRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +46,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         email = findViewById(R.id.email_login);
         password = findViewById(R.id.password_login);
         progressBar = findViewById(R.id.progress_login);
+
         mAuth = FirebaseAuth.getInstance();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
     }
 
     @Override
@@ -87,7 +94,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(task.isSuccessful()){
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if(user.isEmailVerified()){
-                        //redirect to user profil or menu
+                        String currentUserId = mAuth.getCurrentUser().getUid();
+                        //String deviceToken = FirebaseInstanceId.getInstance().getToken();
+
+
+                    /*    UsersRef.child(currentUserId).child("device_token")
+                                .setValue(deviceToken)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        if (task.isSuccessful())
+                                        {
+                                            //Toast.makeText(MainActivity.this, "Logged in Successful...", Toast.LENGTH_SHORT).show();
+                                            //redirect to user profil or menu
+                                            startActivity(new Intent(MainActivity.this,MenuNavigationActivity.class));
+
+
+                                        }
+                                    }
+                                });*/
+
                         startActivity(new Intent(MainActivity.this,MenuNavigationActivity.class));
                     }else{
                         user.sendEmailVerification();

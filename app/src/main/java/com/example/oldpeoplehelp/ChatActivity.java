@@ -47,7 +47,7 @@ public class ChatActivity extends AppCompatActivity
 
     private Toolbar ChatToolBar;
     private FirebaseAuth mAuth;
-    private DatabaseReference RootRef;
+    private DatabaseReference RootRef,NotificationRef;
 
     private ImageButton SendMessageButton, SendFilesButton;
     private EditText MessageInputText;
@@ -73,6 +73,8 @@ public class ChatActivity extends AppCompatActivity
         messageSenderID = mAuth.getCurrentUser().getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
 
+        //for notification
+        NotificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
 
         messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
         messageReceiverName = getIntent().getExtras().get("visit_user_name").toString();
@@ -127,13 +129,13 @@ public class ChatActivity extends AppCompatActivity
         userMessagesList.setAdapter(messageAdapter);
 
 
-        //Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
 
-        //SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-       // saveCurrentDate = currentDate.format(calendar.getTime());
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
 
-        //SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
-        //saveCurrentTime = currentTime.format(calendar.getTime());
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
     }
 
 
@@ -255,6 +257,25 @@ public class ChatActivity extends AppCompatActivity
                     if (task.isSuccessful())
                     {
                         Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
+
+                        HashMap<String, String> chatNotificationMap = new HashMap<>();
+                        chatNotificationMap.put("from", messageSenderID);
+                        chatNotificationMap.put("type", "message");
+
+                        NotificationRef.child(messageReceiverID).push()
+                                .setValue(chatNotificationMap)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        if (task.isSuccessful())
+                                        {
+                                            Toast.makeText(ChatActivity.this,"Notification sent !",Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+
+
                     }
                     else
                     {
