@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -24,6 +26,7 @@ public class ContactListActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private RecyclerView FindFriendsRecyclerList;
     private DatabaseReference UsersRef;
+    private FirebaseUser currentuser;
 
 
     @Override
@@ -62,7 +65,14 @@ public class ContactListActivity extends AppCompatActivity
                 new FirebaseRecyclerAdapter<User, FindFriendViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull FindFriendViewHolder holder, final int position, @NonNull final User user) {
-                        holder.userName.setText(user.getFullname());
+                        currentuser = FirebaseAuth.getInstance().getCurrentUser();
+
+                        if(!currentuser.getEmail().equals(user.getEmail())){
+                        holder.userName.setText(user.getFullname());}
+                        else{
+                            holder.itemView.setVisibility(View.GONE);
+                            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+                        }
                         //holder.userStatus.setText(model.getStatus());
                         /////for image profile
                         //Picasso.get().load(model.getImage()).placeholder(R.drawable.profile_image).into(holder.profileImage);
