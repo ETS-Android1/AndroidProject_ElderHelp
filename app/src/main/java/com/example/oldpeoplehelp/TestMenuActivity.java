@@ -39,6 +39,10 @@ public class TestMenuActivity extends AppCompatActivity {
     public void ClickChat(View view){
         MenuNavigationActivity.redirectActivity(this,TestMenuActivity.class);
     }
+    public void ClickEmergencyCalls(View view){
+        // Redirect activity to Chat : just Test
+        MenuNavigationActivity.redirectActivity(this,CallsActivity.class);
+    }
     public void ClickLogout(View view){
         MenuNavigationActivity.logout(this);
     }

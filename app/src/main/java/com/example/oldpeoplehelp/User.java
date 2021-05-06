@@ -17,4 +17,15 @@ public class User {
         this.age = age;
         this.dateOfBirth = dateOfBirth;
     }
+    public String getFullname() {
+        return fullname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

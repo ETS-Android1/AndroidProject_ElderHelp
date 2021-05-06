@@ -67,7 +67,11 @@ public class MenuNavigationActivity extends AppCompatActivity {
     }
     public void ClickChat(View view){
         // Redirect activity to Chat : just Test
-        redirectActivity(this,TestMenuActivity.class);
+        redirectActivity(this,ContactListActivity.class);
+    }
+    public void ClickEmergencyCalls(View view){
+        // Redirect activity to Chat : just Test
+        redirectActivity(this,CallsActivity.class);
     }
     public void ClickLogout(View view){
         logout(this);

@@ -134,6 +134,25 @@
         android:layout_height="66dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:onClick="ClickEmergencyCalls">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Emergency Calls"
+            android:padding="12dp"
+            android:layout_marginStart="16dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="48dp"
+            android:src="@drawable/ic_calls"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:onClick="ClickLogout">
         <TextView
             android:layout_width="0dp"
@@ -148,4 +167,5 @@
             android:layout_marginEnd="48dp"
             android:src="@drawable/ic_logout"/>
     </LinearLayout>
+
 </LinearLayout>
