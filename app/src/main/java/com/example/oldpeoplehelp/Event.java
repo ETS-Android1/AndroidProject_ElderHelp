@@ -1,16 +1,25 @@
 package com.example.oldpeoplehelp;
 
 public class Event {
-    public String currentUserId, eventName, eventDescription, eventTime;
+    public String idEvent, currentUserId, eventDate, eventName, eventDescription, eventTime;
 
     public Event() {
     }
 
-    public Event(String currentUserId, String eventName, String eventDescription, String eventTime) {
+    public Event(String currentUserId, String eventDate, String eventName, String eventDescription, String eventTime) {
         this.currentUserId = currentUserId;
+        this.eventDate = eventDate;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventTime = eventTime;
+    }
+
+    public String getIdEvent() {
+        return idEvent;
+    }
+
+    public void setIdEvent(String idEvent) {
+        this.idEvent = idEvent;
     }
 
     public String getCurrentUserId() {
@@ -19,6 +28,14 @@ public class Event {
 
     public void setCurrentUserId(String currentUserId) {
         this.currentUserId = currentUserId;
+    }
+
+    public String getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(String eventDate) {
+        this.eventDate = eventDate;
     }
 
     public String getEventName() {

@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -17,20 +19,32 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class PlanActivitiesActivity extends AppCompatActivity {
-    DrawerLayout drawerLayout;
+    CoordinatorLayout drawerLayout;
     CalendarView calendarView;
     FloatingActionButton actionButton;
     Dialog myDialog;
@@ -42,13 +56,90 @@ public class PlanActivitiesActivity extends AppCompatActivity {
     DatabaseReference myRef;
     FirebaseAuth firebaseAuth;
 
+    String selectedDay, selectedMonth, selectedYear;
+    String selectedDate;
+
+    private RecyclerView recyclerViewEvents;
+    EventAdapter eventAdapter;
+    ArrayList<Event> activitiesList, activitiesListAllDays;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_activities);
         myDialog = new Dialog(this);
         drawerLayout = findViewById(R.id.drawer_layout);
+
+        //Current User ID
+        FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
+        final String currentUserId = user.getUid();
+
         calendarView = findViewById(R.id.calendar);
+
+        recyclerViewEvents = findViewById(R.id.listEvents_recyclerView);
+        myRef = FirebaseDatabase.getInstance().getReference().child("Event");
+        recyclerViewEvents.setHasFixedSize(true);
+        recyclerViewEvents.setLayoutManager(new LinearLayoutManager(this));
+
+        activitiesList = new ArrayList<>();
+        activitiesListAllDays = new ArrayList<>();
+        eventAdapter = new EventAdapter(this, activitiesList);
+        recyclerViewEvents.setAdapter(eventAdapter);
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                activitiesList.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Event event = dataSnapshot.getValue(Event.class);
+                    Log.d("DATE", selectedDate);
+                    if( currentUserId.equals(event.getCurrentUserId())){
+                        activitiesListAllDays.add(event);
+                        if(selectedDate.equals(event.getEventDate())){
+                            activitiesList.add(event);
+                        }
+                    }
+                }
+                eventAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy");
+        selectedDate = sdf.format(new Date(calendarView.getDate()));
+        Log.d("DATE", selectedDate);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month,
+                                            int dayOfMonth) {
+                selectedDay = String.valueOf(dayOfMonth);
+                selectedMonth = String.valueOf(month + 1); //Because month passed is 0-based, a number in the interval from 0 for January through 11 for December.
+                selectedYear = String.valueOf(year);
+                selectedDate = selectedDay + "/" + selectedMonth + "/" + selectedYear;
+
+                activitiesList.clear();
+                eventAdapter.notifyDataSetChanged();
+                for(Event event : activitiesListAllDays){
+                    if(selectedDate.equals(event.getEventDate())){
+                        activitiesList.add(event);
+                    }
+                }
+                eventAdapter.notifyDataSetChanged();
+            }
+
+        });
+
+        eventAdapter.setOnItemClickListener(new EventAdapter.OnItemClickListener(){
+            @Override
+            public void onDeleteClick(int position) {
+                removeItem(position);
+            }
+        });
         //calendarView.addDecorator(new CurrentDateDecorator(this));
         /*actionButton = findViewById(R.id.floatingActionButton);
         actionButton.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +149,13 @@ public class PlanActivitiesActivity extends AppCompatActivity {
             }
         });*/
     }
+
+    public void removeItem(int position) {
+        activitiesList.remove(position);
+        eventAdapter.notifyItemRemoved(position);
+        //myRef.child(DatabaseReference.getRef(position).getKey).removeValue();
+    }
+
 
     public void ShowPopup(View v) {
         TextView txtclose;
@@ -106,9 +204,10 @@ public class PlanActivitiesActivity extends AppCompatActivity {
     }
 
     private void insertData(){
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
         final String currentUserId = user.getUid();
-        firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("Event");
         eventName = myDialog.findViewById(R.id.event_name);
         eventDescription = myDialog.findViewById(R.id.event_description);
@@ -121,7 +220,7 @@ public class PlanActivitiesActivity extends AppCompatActivity {
                 String name = eventName.getText().toString();
                 String desc = eventDescription.getText().toString();
                 String time = eventTime.getText().toString();
-                Event event = new Event(currentUserId, name, desc, time);
+                Event event = new Event(currentUserId, selectedDate, name, desc, time);
                 long mDateTime = 9999999999999L - System.currentTimeMillis();
                 String mOrderTime = String.valueOf(mDateTime);
                 myRef.child(mOrderTime).setValue(event).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -141,7 +240,7 @@ public class PlanActivitiesActivity extends AppCompatActivity {
         });
     }
 
-    public void ClickMenu(View view){
+    /*public void ClickMenu(View view){
         MenuNavigationActivity.openDrawer(drawerLayout);
     }
     public void ClickLogo(View view){
@@ -160,5 +259,5 @@ public class PlanActivitiesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         MenuNavigationActivity.closeDrawer(drawerLayout);
-    }
+    }*/
 }
