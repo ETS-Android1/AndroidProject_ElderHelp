@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
 
@@ -27,7 +28,19 @@ public class ContactListActivity extends AppCompatActivity
     private RecyclerView FindFriendsRecyclerList;
     private DatabaseReference UsersRef;
     private FirebaseUser currentuser;
+    TextView setting;
 
+
+    public void ClickSet(View view) {
+        redirectActivity(this,SettingsActivity.class);
+
+
+    }
+    public static void redirectActivity(Activity source, Class destination) {
+        Intent intent = new Intent(source,destination);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        source.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,10 +82,10 @@ public class ContactListActivity extends AppCompatActivity
 
                         if(!currentuser.getEmail().equals(user.getEmail())){
                         holder.userName.setText(user.getFullname());}
-                        else{
+                       /* else{
                             holder.itemView.setVisibility(View.GONE);
                             holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-                        }
+                        }*/
                         //holder.userStatus.setText(model.getStatus());
                         /////for image profile
                         //Picasso.get().load(model.getImage()).placeholder(R.drawable.profile_image).into(holder.profileImage);

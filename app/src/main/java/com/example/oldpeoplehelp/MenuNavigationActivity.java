@@ -53,6 +53,11 @@ public class MenuNavigationActivity extends AppCompatActivity {
         // Reecreer l'activite
         recreate();
     }
+    public void ClickSet(View view) {
+        redirectActivity(this,SettingsActivity.class);
+
+
+    }
     public void ClickPlanning(View view){
         // Redirect activity to Planning ACtivity : just Test
         redirectActivity(this,TestMenuActivity.class);

@@ -2,7 +2,7 @@ package com.example.oldpeoplehelp;
 
 public class User {
 
-    public String fullname,email,password,sexe,address,age,dateOfBirth;
+    public String fullname,email,password,sexe,address,age,dateOfBirth,image;
 
     public User(){
 
@@ -27,5 +27,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
