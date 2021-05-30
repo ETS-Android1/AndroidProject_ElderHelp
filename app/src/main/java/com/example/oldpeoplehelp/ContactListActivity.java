@@ -20,6 +20,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ContactListActivity extends AppCompatActivity
@@ -82,14 +85,15 @@ public class ContactListActivity extends AppCompatActivity
 
                         if(!currentuser.getEmail().equals(user.getEmail())){
                         holder.userName.setText(user.getFullname());}
-                       /* else{
+                       else{
                             holder.itemView.setVisibility(View.GONE);
                             holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-                        }*/
+                        }
                         //holder.userStatus.setText(model.getStatus());
                         /////for image profile
-                        //Picasso.get().load(model.getImage()).placeholder(R.drawable.profile_image).into(holder.profileImage);
-
+                        if(user.getImage()!=null) {
+                            Picasso.get().load(user.getImage()).placeholder(R.drawable.ic_user).into(holder.profileImage);
+                        }
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -100,6 +104,9 @@ public class ContactListActivity extends AppCompatActivity
                                 Intent chatIntent = new Intent(ContactListActivity.this, ChatActivity.class);
                                 chatIntent.putExtra("visit_user_id", visit_user_id);
                                 chatIntent.putExtra("visit_user_name", user.getFullname());
+
+                                    chatIntent.putExtra("visit_user_image", user.getImage());
+
                                 startActivity(chatIntent);
                             }
                         });
@@ -126,7 +133,7 @@ public class ContactListActivity extends AppCompatActivity
     public static class FindFriendViewHolder extends RecyclerView.ViewHolder
     {
         TextView userName;//, userStatus
-        //CircleImageView profileImage;
+        CircleImageView profileImage;
 
 
         public FindFriendViewHolder(@NonNull View itemView)
@@ -135,7 +142,7 @@ public class ContactListActivity extends AppCompatActivity
 
             userName = itemView.findViewById(R.id.fullname);
             //userStatus = itemView.findViewById(R.id.user_status);
-            //profileImage = itemView.findViewById(R.id.users_profile_image);
+            profileImage = itemView.findViewById(R.id.users_profile_image);
         }
     }
 }

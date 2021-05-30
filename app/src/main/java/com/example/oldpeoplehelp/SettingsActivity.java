@@ -147,9 +147,6 @@ public class SettingsActivity extends AppCompatActivity
 
                 final Uri resultUri = result.getUri();
 
-
-                //final StorageReference filePath = UserProfileImagesRef.child(currentUserID + ".jpg");
-
                 final StorageReference filePath = UserProfileImagesRef.child(currentUserID + ".jpg");
                 filePath.putFile(resultUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -176,7 +173,7 @@ public class SettingsActivity extends AppCompatActivity
                             }
                         });
                     }
-                
+
                 });
 
                     }
