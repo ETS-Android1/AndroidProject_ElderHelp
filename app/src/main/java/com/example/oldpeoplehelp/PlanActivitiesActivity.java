@@ -111,7 +111,7 @@ public class PlanActivitiesActivity extends AppCompatActivity {
 
         SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy");
         selectedDate = sdf.format(new Date(calendarView.getDate()));
-        Log.d("DATE", selectedDate);
+        //Log.d("DATE", selectedDate);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override

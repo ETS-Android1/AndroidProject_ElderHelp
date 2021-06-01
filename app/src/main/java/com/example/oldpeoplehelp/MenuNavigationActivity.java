@@ -1,34 +1,147 @@
 package com.example.oldpeoplehelp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
-public class MenuNavigationActivity extends AppCompatActivity {
+import java.util.ArrayList;
 
+public class MenuNavigationActivity extends AppCompatActivity{
+
+    private static final String MY_PREFS_NAME = "";
     // Initialisation des variables
     DrawerLayout drawerLayout;
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
+
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private SpeechRecognizer speechRecognizer;
+    private Intent intentRecognizer;
+    private ImageButton imgbtn;
+    private Button startButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_navigation);
+
+        startService(new Intent(getApplication(), OpenAppService.class));
+
         // Instanciation des variables
         drawerLayout = findViewById(R.id.drawer_layout);
+        imgbtn = findViewById(R.id.mic);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PackageManager.PERMISSION_GRANTED);
+        }
+
+        intentRecognizer = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intentRecognizer.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle bundle) {
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+
+            }
+
+            @Override
+            public void onRmsChanged(float v) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] bytes) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+                speechRecognizer.stopListening();
+                imgbtn.setBackgroundResource(R.drawable.buttonstyle_mic);
+                imgbtn.setImageResource(R.drawable.ic_mic);
+            }
+
+            @Override
+            public void onError(int i) {
+
+            }
+
+            private Boolean isActivated = false;
+            private String activationKeyword = "planner";
+
+            @Override
+            public void onResults(Bundle bundle) {
+                ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                String string = "";
+                if(matches != null){
+                    string = matches.get(0);
+                    if(string.contains(activationKeyword)){
+                        imgbtn.setBackgroundResource(R.drawable.buttonstyle_mic);
+                        imgbtn.setImageResource(R.drawable.ic_mic);
+                        ClickPlanning(drawerLayout);
+                    }
+
+                }
+                else{
+
+                }
+
+            }
+
+            @Override
+            public void onPartialResults(Bundle bundle) {
+
+            }
+
+            @Override
+            public void onEvent(int i, Bundle bundle) {
+
+            }
+        });
+
     }
+
+    public void startListening(View view){
+        startService(new Intent(getApplication(), OpenAppService.class));
+    }
+
+    public void StartButton(View view){
+        view.setBackgroundResource(R.drawable.buttonstyle_mic_clicked);
+        ImageButton imageButton = (ImageButton) view;
+        imageButton.setImageResource(R.drawable.ic_mic_clicked);
+        speechRecognizer.startListening(intentRecognizer);
+    }
+
     public void ClickMenu(View view){
         // Ouvrir le drawer du menu
         openDrawer(drawerLayout);
@@ -106,5 +219,11 @@ public class MenuNavigationActivity extends AppCompatActivity {
         super.onPause();
         // Fermer le drawer
         closeDrawer(drawerLayout);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
     }
 }

@@ -11,11 +11,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <include layout="@layout/main_toolbar"/>
-        <TextView
+
+        <LinearLayout
+            android:layout_marginStart="6dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="Home"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Listening"
+                android:onClick="startListening"
+                android:id="@+id/background"/>
+            <ImageButton
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_mic"
+                android:background="@drawable/buttonstyle_mic"
+                android:onClick="StartButton"
+                android:id="@+id/mic"/>
+
+        </LinearLayout>
+
     </LinearLayout>
     <RelativeLayout
         android:layout_width="300dp"
