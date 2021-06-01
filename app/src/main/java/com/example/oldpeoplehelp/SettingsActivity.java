@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -21,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,9 +43,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsActivity extends AppCompatActivity
 {
-    private Button UpdateAccountSettings;
-    private EditText userName, userStatus;
+
     private CircleImageView userProfileImage;
+
+    private FirebaseUser user;
+    private DatabaseReference reference;
+    private String userID;
 
     private String currentUserID;
     private FirebaseAuth mAuth;
@@ -67,21 +72,37 @@ public class SettingsActivity extends AppCompatActivity
         currentUserID = mAuth.getCurrentUser().getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
         UserProfileImagesRef = FirebaseStorage.getInstance().getReference().child("Profile Images");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
 
-
+        final TextView fullname = findViewById(R.id.fullnameUser);
         InitializeFields();
 
+        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
 
-        userName.setVisibility(View.INVISIBLE);
 
-
-        UpdateAccountSettings.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                UpdateSettings();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+                if(userProfile != null) {
+                    // Recuperation des cordonnees
+                    String fullName_ = userProfile.fullname;
+                    fullname.setText(fullname.getText()+" "+fullName_);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(SettingsActivity.this,"Something wrong happened !",Toast.LENGTH_LONG).show();
             }
         });
+
+
+
+
+
 
 
         RetrieveUserInfo();
@@ -97,15 +118,15 @@ public class SettingsActivity extends AppCompatActivity
                 startActivityForResult(galleryIntent, GalleryPick);
             }
         });
+
+
     }
 
 
 
     private void InitializeFields()
     {
-        UpdateAccountSettings = (Button) findViewById(R.id.update_settings_button);
-        userName = (EditText) findViewById(R.id.set_user_name);
-        userStatus = (EditText) findViewById(R.id.set_profile_status);
+
         userProfileImage = (CircleImageView) findViewById(R.id.set_profile_image);
         loadingBar = new ProgressDialog(this);
 
@@ -183,45 +204,6 @@ public class SettingsActivity extends AppCompatActivity
 
 
 
-    private void UpdateSettings()
-    {
-        String setUserName = userName.getText().toString();
-        String setStatus = userStatus.getText().toString();
-
-        if (TextUtils.isEmpty(setUserName))
-        {
-            Toast.makeText(this, "Please write your user name first....", Toast.LENGTH_SHORT).show();
-        }
-        if (TextUtils.isEmpty(setStatus))
-        {
-            Toast.makeText(this, "Please write your status....", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            HashMap<String, Object> profileMap = new HashMap<>();
-            profileMap.put("uid", currentUserID);
-            //profileMap.put("name", setUserName);
-            //profileMap.put("status", setStatus);
-            RootRef.child("Users").child(currentUserID).updateChildren(profileMap)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task)
-                        {
-                            if (task.isSuccessful())
-                            {
-                                SendUserToMainActivity();
-                                Toast.makeText(SettingsActivity.this, "Profile Updated Successfully...", Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            {
-                                String message = task.getException().toString();
-                                Toast.makeText(SettingsActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        }
-    }
-
 
 
     private void RetrieveUserInfo()
@@ -231,33 +213,24 @@ public class SettingsActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot)
                     {
-                        if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("fullname") && (dataSnapshot.hasChild("image"))))
+                        if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("image")))
                         {
-                            String retrieveUserName = dataSnapshot.child("fullname").getValue().toString();
-                            //String retrievesStatus = dataSnapshot.child("status").getValue().toString();
+
                             String retrieveProfileImage = dataSnapshot.child("image").getValue().toString();
 
-                            userName.setText(retrieveUserName);
-                            //userStatus.setText(retrievesStatus);
                             try{
                             Picasso.get().load(retrieveProfileImage).into(userProfileImage);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                        else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("fullname")))
+                        else if  ((dataSnapshot.exists()) && (dataSnapshot.hasChild("fullname")))
                         {
                             String retrieveUserName = dataSnapshot.child("fullname").getValue().toString();
-                            //String retrievesStatus = dataSnapshot.child("status").getValue().toString();
 
-                            userName.setText(retrieveUserName);
-                            //userStatus.setText(retrievesStatus);
+
                         }
-                        else
-                        {
-                            userName.setVisibility(View.VISIBLE);
-                            Toast.makeText(SettingsActivity.this, "Please set & update your profile information...", Toast.LENGTH_SHORT).show();
-                        }
+
                     }
 
                     @Override

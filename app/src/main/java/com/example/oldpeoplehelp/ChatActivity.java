@@ -48,7 +48,7 @@ public class ChatActivity extends AppCompatActivity
 
     private Toolbar ChatToolBar;
     private FirebaseAuth mAuth;
-    private DatabaseReference RootRef,NotificationRef;
+    private DatabaseReference RootRef;
 
     private ImageButton SendMessageButton, SendFilesButton;
     private EditText MessageInputText;
@@ -74,8 +74,8 @@ public class ChatActivity extends AppCompatActivity
         messageSenderID = mAuth.getCurrentUser().getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
 
-        //for notification
-        NotificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
+
+
 
         messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
         messageReceiverName = getIntent().getExtras().get("visit_user_name").toString();
@@ -277,18 +277,7 @@ public class ChatActivity extends AppCompatActivity
                         chatNotificationMap.put("from", messageSenderID);
                         chatNotificationMap.put("type", "message");
 
-                        NotificationRef.child(messageReceiverID).push()
-                                .setValue(chatNotificationMap)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task)
-                                    {
-                                        if (task.isSuccessful())
-                                        {
-                                            Toast.makeText(ChatActivity.this,"Notification sent !",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
+
 
 
                     }

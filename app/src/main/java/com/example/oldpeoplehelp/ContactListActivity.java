@@ -59,11 +59,6 @@ public class ContactListActivity extends AppCompatActivity
         FindFriendsRecyclerList.setLayoutManager(new LinearLayoutManager(this));
 
 
-        //mToolbar = (Toolbar) findViewById(R.id.find_friends_toolbar);
-        //setSupportActionBar(mToolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //getSupportActionBar().setTitle("Find Friends");
     }
 
 
@@ -84,12 +79,12 @@ public class ContactListActivity extends AppCompatActivity
                         currentuser = FirebaseAuth.getInstance().getCurrentUser();
 
                         if(!currentuser.getEmail().equals(user.getEmail())){
-                        holder.userName.setText(user.getFullname());}
-                       else{
+                            holder.userName.setText(user.getFullname());}
+                        else{
                             holder.itemView.setVisibility(View.GONE);
                             holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
                         }
-                        //holder.userStatus.setText(model.getStatus());
+
                         /////for image profile
                         if(user.getImage()!=null) {
                             Picasso.get().load(user.getImage()).placeholder(R.drawable.ic_user).into(holder.profileImage);
@@ -105,7 +100,7 @@ public class ContactListActivity extends AppCompatActivity
                                 chatIntent.putExtra("visit_user_id", visit_user_id);
                                 chatIntent.putExtra("visit_user_name", user.getFullname());
 
-                                    chatIntent.putExtra("visit_user_image", user.getImage());
+                                chatIntent.putExtra("visit_user_image", user.getImage());
 
                                 startActivity(chatIntent);
                             }
@@ -132,7 +127,7 @@ public class ContactListActivity extends AppCompatActivity
 
     public static class FindFriendViewHolder extends RecyclerView.ViewHolder
     {
-        TextView userName;//, userStatus
+        TextView userName;
         CircleImageView profileImage;
 
 
@@ -141,7 +136,7 @@ public class ContactListActivity extends AppCompatActivity
             super(itemView);
 
             userName = itemView.findViewById(R.id.fullname);
-            //userStatus = itemView.findViewById(R.id.user_status);
+
             profileImage = itemView.findViewById(R.id.users_profile_image);
         }
     }
