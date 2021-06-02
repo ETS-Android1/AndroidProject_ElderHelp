@@ -3,9 +3,15 @@ package com.example.oldpeoplehelp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class TestMenuActivity extends AppCompatActivity {
 
@@ -24,29 +30,55 @@ public class TestMenuActivity extends AppCompatActivity {
         MenuNavigationActivity.closeDrawer(drawerLayout);
     }
     public void ClickHome(View view){
-        MenuNavigationActivity.redirectActivity(this,MenuNavigationActivity.class);
+        recreate();
     }
     public void ClickPlanning(View view){
         // if planning is the test
-        recreate();
+        redirectActivity(this,PlanActivitiesActivity.class);
     }
     public void ClickMedicinsReminder(View view){
-        MenuNavigationActivity.redirectActivity(this,TestMenuActivity.class);
+        redirectActivity(this,NotificationsMedicineActivity.class);
     }
     public void ClickZoneMapping(View view){
-        MenuNavigationActivity.redirectActivity(this,MapsActivity.class);
+        redirectActivity(this,MapsActivity.class);
     }
     public void ClickChat(View view){
-        MenuNavigationActivity.redirectActivity(this,TestMenuActivity.class);
+        redirectActivity(this,ContactListActivity.class);
     }
     public void ClickEmergencyCalls(View view){
         // Redirect activity to Chat : just Test
-        MenuNavigationActivity.redirectActivity(this,CallsActivity.class);
+        redirectActivity(this,CallsActivity.class);
     }
     public void ClickLogout(View view){
         MenuNavigationActivity.logout(this);
     }
+    public static void logout(final Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Logout");
+        builder.setMessage("Are you sure you want to logout ?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                /*activity.finishAffinity();
+                System.exit(0);*/
+                FirebaseAuth.getInstance().signOut();
+                redirectActivity(activity,MainActivity.class);
+            }
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+    }
 
+    public static void redirectActivity(Activity source, Class destination) {
+        Intent intent = new Intent(source,destination);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        source.startActivity(intent);
+    }
     @Override
     protected void onPause() {
         super.onPause();

@@ -1,5 +1,4 @@
 package com.example.oldpeoplehelp;
-
 import android.content.Context;
 
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 //import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -42,13 +42,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatActivity extends AppCompatActivity
 {
     private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID;
-
+    private DatabaseReference usersRef;
     private TextView userName, userLastSeen;
     private CircleImageView userImage;
 
     private Toolbar ChatToolBar;
     private FirebaseAuth mAuth;
-    private DatabaseReference RootRef,NotificationRef;
+    private DatabaseReference RootRef;
 
     private ImageButton SendMessageButton, SendFilesButton;
     private EditText MessageInputText;
@@ -74,19 +74,34 @@ public class ChatActivity extends AppCompatActivity
         messageSenderID = mAuth.getCurrentUser().getUid();
         RootRef = FirebaseDatabase.getInstance().getReference();
 
-        //for notification
-        NotificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
+
+
 
         messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
         messageReceiverName = getIntent().getExtras().get("visit_user_name").toString();
-        //messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
-
 
         IntializeControllers();
 
-
         userName.setText(messageReceiverName);
-        //Picasso.get().load(messageReceiverImage).placeholder(R.drawable.profile_image).into(userImage);
+        usersRef = FirebaseDatabase.getInstance().getReference().child("Users").child(messageReceiverID);
+
+        usersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("image")) {
+
+                    messageReceiverImage = getIntent().getExtras().get("visit_user_image").toString();
+                    Picasso.get().load(messageReceiverImage).placeholder(R.drawable.ic_user).into(userImage);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -94,7 +109,6 @@ public class ChatActivity extends AppCompatActivity
                 SendMessage();
             }
         });
-
 
         DisplayLastSeen();
     }
@@ -119,8 +133,8 @@ public class ChatActivity extends AppCompatActivity
         userLastSeen = (TextView) findViewById(R.id.custom_user_last_seen);
         userImage = (CircleImageView) findViewById(R.id.custom_profile_image);
 
+
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_btn);
-        //SendFilesButton = (ImageButton) findViewById(R.id.send_files_btn);
         MessageInputText = (EditText) findViewById(R.id.input_message);
 
         messageAdapter = new MessageAdapter(messagesList);
@@ -263,18 +277,7 @@ public class ChatActivity extends AppCompatActivity
                         chatNotificationMap.put("from", messageSenderID);
                         chatNotificationMap.put("type", "message");
 
-                        NotificationRef.child(messageReceiverID).push()
-                                .setValue(chatNotificationMap)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task)
-                                    {
-                                        if (task.isSuccessful())
-                                        {
-                                            Toast.makeText(ChatActivity.this,"Notification sent !",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
+
 
 
                     }

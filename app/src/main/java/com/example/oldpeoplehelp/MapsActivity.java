@@ -1,18 +1,26 @@
 package com.example.oldpeoplehelp;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,9 +44,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.oldpeoplehelp.MenuNavigationActivity.redirectActivity;
 
 /**
  * @author Ankit Singh On 29/09/2019
@@ -59,6 +71,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int REQUEST_LOCATION_CODE = 99;
     int PROXIMITY_RADIUS = 5000;
     double latitude,longitude;
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private SpeechRecognizer speechRecognizer;
+    private Intent intentRecognizer;
+    private ImageButton imgbtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +89,110 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        imgbtn = findViewById(R.id.mic);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PackageManager.PERMISSION_GRANTED);
+        }
+
+        intentRecognizer = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intentRecognizer.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle bundle) {
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+
+            }
+
+            @Override
+            public void onRmsChanged(float v) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] bytes) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+                speechRecognizer.stopListening();
+                imgbtn.setBackgroundResource(R.drawable.buttonstyle_mic);
+                imgbtn.setImageResource(R.drawable.ic_mic);
+            }
+
+            @Override
+            public void onError(int i) {
+
+            }
+
+            private Boolean isActivated = false;
+            private String[] activationKeyword = {"planner","medicine","map","text","call","settings"};
+
+
+            @Override
+            public void onResults(Bundle bundle) {
+                ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                String string = "";
+                if(matches != null){
+                    string = matches.get(0);
+                    for(String c : activationKeyword){
+                        if(string.contains(c)){
+                            imgbtn.setBackgroundResource(R.drawable.buttonstyle_mic);
+                            imgbtn.setImageResource(R.drawable.ic_mic);
+                            switch(c){
+                                case "planner":{
+                                    ClickPlanning(drawerLayout);
+                                    break;
+                                }
+                                case "medicine":{
+                                    ClickMedicinsReminder(drawerLayout);
+                                    break;
+                                }
+                                case "map":{
+                                    ClickZoneMapping(drawerLayout);
+                                    break;
+                                }
+                                case "text":{
+                                    ClickChat(drawerLayout);
+                                    break;
+                                }
+                                case "call":{
+                                    ClickEmergencyCalls(drawerLayout);
+                                    break;
+                                }
+                                case "settings":{
+                                    ClickSet(drawerLayout);
+                                    break;
+                                }
+                                default: break;
+                            }
+                        } else{
+
+                        }
+
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onPartialResults(Bundle bundle) {
+
+            }
+
+            @Override
+            public void onEvent(int i, Bundle bundle) {
+
+            }
+        });
 
     }
     //////////////////////////menu//////////////////
@@ -89,18 +209,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         int id = item.getItemId();
 
-        //switch (id){
-            /*case R.id.profile:
-                Toast.makeText(this,"Profile in Development",Toast.LENGTH_LONG).show();
-                break;
-            case R.id.about:
-                Toast.makeText(this,"This app developed by Ankit Singh",Toast.LENGTH_LONG).show();
-                break;*/
-            /*case R.id.logout:
-                finish();
-                Toast.makeText(this,"Log Out Successfull", Toast.LENGTH_LONG).show();
-                break;*/
-        //}
+
         return true;
     }
     ////////////////////menu///////////
@@ -297,7 +406,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
         googlePlaceUrl.append("&type="+nearbyPlace);
         googlePlaceUrl.append("&sensor=true");
-        googlePlaceUrl.append("&key="+"AIzaSyCh0x59y--VK7Z-ezln3lzRIJHbu15AZps");
+        googlePlaceUrl.append("&key="+"AIzaSyAEDIC-06oOYM_CpxWaWNyxpY9iO0oQd_I");//AIzaSyCh0x59y--VK7Z-ezln3lzRIJHbu15AZps
 
         Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
 
@@ -355,28 +464,63 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MenuNavigationActivity.closeDrawer(drawerLayout);
     }
     public void ClickHome(View view){
-        MenuNavigationActivity.redirectActivity(this,MenuNavigationActivity.class);
+        redirectActivity(this,MenuNavigationActivity.class);
     }
     public void ClickPlanning(View view){
-        MenuNavigationActivity.redirectActivity(this,TestMenuActivity.class);
+        redirectActivity(this,PlanActivitiesActivity.class);
     }
     public void ClickMedicinsReminder(View view){
-        MenuNavigationActivity.redirectActivity(this,TestMenuActivity.class);
+        redirectActivity(this,NotificationsMedicineActivity.class);
     }
     public void ClickZoneMapping(View view){
         recreate();
     }
     public void ClickChat(View view){
-        MenuNavigationActivity.redirectActivity(this,TestMenuActivity.class);
+        redirectActivity(this,ContactListActivity.class);
     }
     public void ClickEmergencyCalls(View view){
         // Redirect activity to Chat : just Test
-        MenuNavigationActivity.redirectActivity(this,CallsActivity.class);
+        redirectActivity(this,CallsActivity.class);
+    }
+    public void ClickSet(View view) {
+        redirectActivity(this,SettingsActivity.class);
+    }
+    public void StartButton(View view){
+        view.setBackgroundResource(R.drawable.buttonstyle_mic_clicked);
+        ImageButton imageButton = (ImageButton) view;
+        imageButton.setImageResource(R.drawable.ic_mic_clicked);
+        speechRecognizer.startListening(intentRecognizer);
     }
     public void ClickLogout(View view){
-        MenuNavigationActivity.logout(this);
+        logout(this);
+    }
+    public static void logout(final Activity activity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Logout");
+        builder.setMessage("Are you sure you want to logout ?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                /*activity.finishAffinity();
+                System.exit(0);*/
+                FirebaseAuth.getInstance().signOut();
+                redirectActivity(activity,MainActivity.class);
+            }
+        });
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
 
+    public static void redirectActivity(Activity source, Class destination) {
+        Intent intent = new Intent(source,destination);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        source.startActivity(intent);
+    }
     @Override
     protected void onPause() {
         super.onPause();

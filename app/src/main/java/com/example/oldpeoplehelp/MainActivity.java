@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText email,password;
     private Button login;
 
-    private ProgressBar progressBar;
+    //private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         forgotpassword.setOnClickListener(this);
         email = findViewById(R.id.email_login);
         password = findViewById(R.id.password_login);
-        progressBar = findViewById(R.id.progress_login);
+        //progressBar = findViewById(R.id.progress_login);
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             password.requestFocus();
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(email_,password_).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

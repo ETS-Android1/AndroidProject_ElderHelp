@@ -22,7 +22,7 @@ public class RegistrationActivity extends AppCompatActivity{
 
     private EditText fullname,email,password,address,sexe,age,date_of_birth;
     private Button sign_up;
-    private ProgressBar progressBar;
+    //private ProgressBar progressBar;
     private FirebaseAuth mAuth;
 
     @Override
@@ -48,7 +48,7 @@ public class RegistrationActivity extends AppCompatActivity{
             }
         });
 
-        progressBar = findViewById(R.id.progress_register);
+        //progressBar = findViewById(R.id.progress_register);
 
     }
     private void registerNewUser(){
@@ -109,7 +109,7 @@ public class RegistrationActivity extends AppCompatActivity{
             return;
         }
         // Affichage de progress bar
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
         // Creation du compte ar Firebase
         mAuth.createUserWithEmailAndPassword(email_,password_).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
@@ -124,17 +124,17 @@ public class RegistrationActivity extends AppCompatActivity{
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
                                         Toast.makeText(RegistrationActivity.this,"User has been registered successfully ! ",Toast.LENGTH_LONG).show();
-                                        progressBar.setVisibility(View.GONE);
+                                        //progressBar.setVisibility(View.GONE);
                                         // Rendez-vous Login :)
                                     }else{
                                         Toast.makeText(RegistrationActivity.this,"Registration failed ! Try Again ",Toast.LENGTH_LONG).show();
-                                        progressBar.setVisibility(View.GONE);
+                                        //progressBar.setVisibility(View.GONE);
                                     }
                                 }
                             });
                         }else{
                             Toast.makeText(RegistrationActivity.this,"Registration failed !",Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
+                            //progressBar.setVisibility(View.GONE);
                         }
                     }
                 });

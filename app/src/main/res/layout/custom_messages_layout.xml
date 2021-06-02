@@ -9,7 +9,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
-        android:src="@drawable/ic_logo"
+        android:src="@drawable/ic_pdp_user"
         />
 
     <TextView
@@ -17,16 +17,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="3dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/message_profile_image"
         android:background="@drawable/receiver_messages_layout"
-        android:text="receiver messages here"
+        android:fontFamily="monospace"
         android:padding="10dp"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:text="receiver messages here"
         android:textColor="@android:color/black"
-        />
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
 
     <ImageView
@@ -52,15 +52,15 @@
         android:id="@+id/sender_messsage_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="@+id/receiver_message_text"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
-        android:layout_alignParentTop="@+id/receiver_message_text"
         android:background="@drawable/sender_messages_layout"
-        android:text="sender messages"
-        android:textSize="14sp"
+        android:fontFamily="monospace"
         android:padding="10dp"
-        android:textStyle="bold"
+        android:text="sender messages"
         android:textColor="@android:color/black"
-        />
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

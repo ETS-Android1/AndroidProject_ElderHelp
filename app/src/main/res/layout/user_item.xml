@@ -16,7 +16,7 @@
             android:layout_width="80dp"
             android:layout_height="70dp"
             android:paddingRight="20dp"
-            android:src="@drawable/ic_user"/>
+            android:src="@drawable/ic_pdp_user"/>
 
 
         <LinearLayout
@@ -35,11 +35,11 @@
                     android:id="@+id/fullname"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
                     android:text="user name"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/user_online_status"
@@ -56,11 +56,11 @@
                 android:id="@+id/user_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="user status"
                 android:layout_margin="2dp"
+                android:fontFamily="monospace"
+                android:text="offline"
                 android:textAlignment="textStart"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
 
             <LinearLayout
