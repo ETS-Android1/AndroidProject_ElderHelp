@@ -18,17 +18,6 @@ tools:context=".TestMenuActivity">
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="match_parent">
 
-        <!--    <Button-->
-        <!--        android:id="@+id/B_search"-->
-        <!--        android:layout_width="100dp"-->
-        <!--        android:layout_height="45dp"-->
-        <!--        android:layout_alignParentTop="true"-->
-        <!--        android:layout_alignParentRight="true"-->
-        <!--        android:layout_toEndOf="@+id/TF_location"-->
-        <!--        android:onClick="onClick"-->
-        <!--        android:text="Search"-->
-        <!--        android:layout_toRightOf="@+id/TF_location" />-->
-
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:map="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"

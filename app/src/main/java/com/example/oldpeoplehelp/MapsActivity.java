@@ -52,10 +52,6 @@ import java.util.List;
 
 import static com.example.oldpeoplehelp.MenuNavigationActivity.redirectActivity;
 
-/**
- * @author Ankit Singh On 29/09/2019
- */
-
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -199,7 +195,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onCreateOptionsMenu(Menu m) {
 
-        //getMenuInflater().inflate(R.menu.mymenu,m);
+
 
         return true;
     }
@@ -240,12 +236,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case
      */
+    //OnMpReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -412,7 +405,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return googlePlaceUrl.toString();
     }
-
+    //ConnectionCallbacks
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 

@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class UsersAdapter extends ArrayAdapter implements View.OnClickListener {
+public class  UsersAdapter extends ArrayAdapter implements View.OnClickListener {
     private Activity mContext;
     List<User> userList;
 

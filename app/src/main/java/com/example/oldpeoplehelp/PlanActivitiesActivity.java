@@ -108,6 +108,7 @@ public class PlanActivitiesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 activitiesList.clear();
+                activitiesListAllDays.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Event event = dataSnapshot.getValue(Event.class);
                     Log.d("DATE", selectedDate);

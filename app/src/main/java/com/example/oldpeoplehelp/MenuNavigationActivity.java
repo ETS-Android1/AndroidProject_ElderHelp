@@ -44,6 +44,7 @@ public class MenuNavigationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu_navigation);
         // Instanciation des variables
         drawerLayout = findViewById(R.id.drawer_layout);
+        // Acces par Voix
         imgbtn = findViewById(R.id.mic);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -149,6 +150,7 @@ public class MenuNavigationActivity extends AppCompatActivity {
             }
         });
     }
+    //Menu de Navigation
     public void ClickMenu(View view){
         // Ouvrir le drawer du menu
         openDrawer(drawerLayout);
