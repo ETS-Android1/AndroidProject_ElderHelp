@@ -3,7 +3,7 @@
 A mobile application for helping elderly people on their daily lives with some functionnalities such as:
 - Plan their activities 
 - Medicine reminder
-- Make emrgency calls  
+- Make emergency calls  
 - Navigation by voice menu
 - In addition to a little chat
 
